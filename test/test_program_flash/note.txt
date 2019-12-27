@@ -1,0 +1,3 @@
+1. C#中 @为逐字字符串（带转义，所见即所得）
+2. 命令行烧写固件 C:\Program Files (x86)\STMicroelectronics\STM32 ST-LINK Utility\ST-LINK Utility>ST-LINK_CLI.exe -c SWD UR -P "C:\Users\A
+dministrator\Desktop\zigbee_node-dt1.0-v1.0.2r.hex" -V

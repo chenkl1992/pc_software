@@ -1,0 +1,9 @@
+D:\self_project\pc_software\test\test_program_flash\program_flash\program_flash\bin\Debug\program_flash.exe.config
+D:\self_project\pc_software\test\test_program_flash\program_flash\program_flash\bin\Debug\program_flash.exe
+D:\self_project\pc_software\test\test_program_flash\program_flash\program_flash\bin\Debug\program_flash.pdb
+D:\self_project\pc_software\test\test_program_flash\program_flash\program_flash\obj\Debug\program_flash.csprojAssemblyReference.cache
+D:\self_project\pc_software\test\test_program_flash\program_flash\program_flash\obj\Debug\program_flash.Form1.resources
+D:\self_project\pc_software\test\test_program_flash\program_flash\program_flash\obj\Debug\program_flash.Properties.Resources.resources
+D:\self_project\pc_software\test\test_program_flash\program_flash\program_flash\obj\Debug\program_flash.csproj.GenerateResource.cache
+D:\self_project\pc_software\test\test_program_flash\program_flash\program_flash\obj\Debug\program_flash.exe
+D:\self_project\pc_software\test\test_program_flash\program_flash\program_flash\obj\Debug\program_flash.pdb
