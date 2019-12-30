@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Threading;
+using System.IO;
 
 namespace program_flash
 {
@@ -18,17 +19,29 @@ namespace program_flash
         public Form1()
         {
             InitializeComponent();
+            Control.CheckForIllegalCrossThreadCalls = false;
         }
 
         private void select_Click(object sender, EventArgs e)
         {
             openFileDialog1.Filter = "固件|*.hex";
-            openFileDialog1.InitialDirectory = "C:\\Users\\Administrator\\Desktop";
+            openFileDialog1.InitialDirectory = @"C:\Users\Administrator\Desktop";
             openFileDialog1.FileName = "";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 file_path_box.Text = openFileDialog1.FileName;
             }
+            else 
+            {
+                
+            }
+        }
+
+        private void startprogram_Click(object sender, EventArgs e)
+        {
+            flashProgram();
+            //loop();
+
         }
 
         private void flashProgram()
@@ -54,24 +67,40 @@ namespace program_flash
             strCMD = strCMD + "\"";
             strCMD = strCMD + " -V";
 
-            p.StartInfo.Arguments = "/c " + strCMD;    //设定程式执行参数
+            //p.StartInfo.Arguments = "/c " + strCMD;    //设定程式执行参数
 
+            p.StartInfo.Arguments = "/c " + "ping 192.168.1.207";    //设定程式执行参数
+
+            p.OutputDataReceived += new DataReceivedEventHandler(SortOutputHandler); // 为异步获取订阅事件
             p.Start();//启动程序
             p.BeginOutputReadLine();// 异步获取命令行内容
+            //p.WaitForExit();
+            //p.Close();
         }
+
+        private void SortOutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
+        {
+            //Console.WriteLine(outLine.Data);
+            if (!String.IsNullOrEmpty(outLine.Data))
+            {
+                string str = outLine.Data + Environment.NewLine;
+                this.logbox.AppendText(str);
+                this.logbox.ScrollToCaret();
+            }
+        }
+
         private void loop()
         {
             for (var i = 0; i <= 100; i++)
             {
-                progressBar1.Value = i;
+                program_progress.Value = i;
                 Task.Delay(250);
             }
         }
 
-        private void startprogram_Click(object sender, EventArgs e)
+        private void clear_logbox_Click(object sender, EventArgs e)
         {
-            flashProgram();
-            //loop();
+            logbox.Text = "";
         }
     }
 }
