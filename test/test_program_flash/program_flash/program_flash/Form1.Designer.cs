@@ -1,6 +1,6 @@
 ﻿namespace program_flash
 {
-    partial class Form1
+    partial class 固件烧写工具
     {
         /// <summary>
         /// 必需的设计器变量。
@@ -93,7 +93,7 @@
             this.clear_logbox.Text = "清空";
             this.clear_logbox.Click += new System.EventHandler(this.clear_logbox_Click);
             // 
-            // Form1
+            // 固件烧写工具
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -104,8 +104,8 @@
             this.Controls.Add(this.program_progress);
             this.Controls.Add(this.startprogram);
             this.Controls.Add(this.select);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "固件烧写工具";
+            this.Text = "固件烧写工具";
             this.ResumeLayout(false);
             this.PerformLayout();
 
