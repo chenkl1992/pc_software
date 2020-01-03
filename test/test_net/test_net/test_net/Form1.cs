@@ -110,11 +110,20 @@ namespace test_net
                     socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                     IPAddress ip = IPAddress.Parse(ip_box.Text.Trim());
                     IPEndPoint point = new IPEndPoint(ip, Convert.ToInt32(port_box.Text.Trim()));
-                    socket.Connect(point);
-                    logMsg("连接成功");
                     socket_thread_receive = new Thread(Recive);
                     socket_thread_receive.IsBackground = true;
-                    socket_thread_receive.Start();
+                    try
+                    {
+                        socket.Connect(point);
+                        logMsg("连接成功");
+                        socket_thread_receive.Start();
+                    }
+                    catch
+                    {
+                        net_state_change();
+                        socket_init();
+                        logMsg("未找到服务器！");
+                    }
                 }
                 else
                 {
@@ -343,7 +352,7 @@ namespace test_net
         //数据发送
         private void send()
         {
-            //try
+            try
             {
                 if (send_box.Text == "")
                 {
@@ -363,13 +372,17 @@ namespace test_net
                 }
                 logMsg("[Tx]: " + str + "\r");
             }
-            //catch { }
+            catch 
+            {
+                periodic_state_change();
+                net_state_change();
+                socket_init();
+                logMsg("服务器关闭！");
+            }
         }
 
-        private void send_peri_checkbox_CheckedChanged(object sender, EventArgs e)
+        private void periodic_state_change()
         {
-            if (send_peri_checkbox.Checked == false)
-            {
                 send_peri_textbox.Enabled = true;
                 //若正在周期发送-->停止
                 if (send_button.Enabled == false)
@@ -378,8 +391,15 @@ namespace test_net
                     periodic_send_timer.Stop();
                     send_button.Enabled = true;
                 }
+        }
+
+        private void send_peri_checkbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (send_peri_checkbox.Checked == false)
+            {
+                periodic_state_change();
             }
-            else 
+            else
             {
                 send_peri_textbox.Enabled = false;
             }
@@ -409,6 +429,11 @@ namespace test_net
         private void periodic_send_timer_Tick(object sender, EventArgs e)
         {
             send();
+        }
+
+        private void clearScreenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            clearMsg();
         }
     }
 }
