@@ -40,7 +40,6 @@ namespace test_net
         {
             Control.CheckForIllegalCrossThreadCalls = false;
             net_setting_load();
-            socket_init();
         }
 
         //log 打印
@@ -79,14 +78,8 @@ namespace test_net
             return localaddr.ToString();
         }
 
-        //初始化socket
-        private void socket_init()
-        {
-            //socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        }
-
         //socket 绑定和连接
-        private void socket_do()
+        private void socket_init()
         {
             //try
             {
@@ -95,10 +88,19 @@ namespace test_net
                     socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                     IPAddress ip = IPAddress.Parse(ip_box.Text.Trim());
                     IPEndPoint point = new IPEndPoint(ip, Convert.ToInt32(port_box.Text.Trim()));
-                    socket.Bind(point);
-                    logMsg("监听成功！");
-                    socket.Listen(10);
-                    socket.BeginAccept(Listen, socket);
+                    try
+                    {
+                        socket.Bind(point);
+                        logMsg("监听成功！");
+                        socket.Listen(10);
+                        socket.BeginAccept(Listen, socket);
+                    }
+                    catch
+                    {
+                        net_state_change();
+                        socket_init();
+                        logMsg("该端口已被占用！");
+                    }
                 }
                 else if (net_connect_state == (int)connect_state.CONNECT)
                 {
@@ -115,7 +117,10 @@ namespace test_net
                 {
                     if (net_connect_state == (int)connect_state.ABORT)
                     {
-                        server_socket.Shutdown(SocketShutdown.Both);
+                        if(server_socket != null)
+                        {
+                            server_socket.Shutdown(SocketShutdown.Both);
+                        }
                         socket.Close();
                         socket = null;
                         //server_socket.Close();
@@ -240,13 +245,16 @@ namespace test_net
                     else if (net_connect_state == (int)connect_state.CONNECT)
                     {
                         // 实际接收到的有效字节数
-                        int r = socket.Receive(buffer);
-                        if (r == 0)
+                        if (socket != null)
                         {
-                            break;
+                            int r = socket.Receive(buffer);
+                            if (r == 0)
+                            {
+                                break;
+                            }
+                            string str = Encoding.UTF8.GetString(buffer, 0, r);
+                            logMsg("[" + socket.RemoteEndPoint + "]:" + str + "\r");
                         }
-                        string str = Encoding.UTF8.GetString(buffer, 0, r);
-                        logMsg("[" + socket.RemoteEndPoint + "]:" + str + "\r");
                     }
                 }
             }
@@ -257,8 +265,8 @@ namespace test_net
         {
             //状态变化
             net_state_change();
-            //建立socket
-            socket_do();
+            //建立/关闭socket
+            socket_init();
         }
 
         private void clear_recive_wind_button_Click(object sender, EventArgs e)
@@ -268,7 +276,7 @@ namespace test_net
 
         private void send_button_Click(object sender, EventArgs e)
         {
-            try
+            //try
             {
                 if (send_box.Text == "")
                 {
@@ -286,7 +294,7 @@ namespace test_net
                     server_socket.Send(buffer);
                 }
             }
-            catch { }
+            //catch { }
         }
     }
 }
