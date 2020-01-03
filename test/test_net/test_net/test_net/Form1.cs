@@ -73,7 +73,10 @@ namespace test_net
         //获取本机ip地址
         private string get_localhost_ip()
         {
+#pragma warning disable CS0618 // 类型或成员已过时
             IPHostEntry localhost = Dns.GetHostByName(Dns.GetHostName());
+#pragma warning restore CS0618 // 类型或成员已过时
+
             IPAddress localaddr = localhost.AddressList[0];
             return localaddr.ToString();
         }
@@ -222,6 +225,72 @@ namespace test_net
             //}     
         }
 
+        private void hex_send_checkbox_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void hex_display_checkbox_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void display_format_change(byte[] bytes, int r)
+        {
+            string str;
+            if (hex_display_checkbox.Checked == true)
+            {
+                str = ByteToHexString(bytes, r);
+            }
+            else
+            {
+                str = Encoding.UTF8.GetString(bytes, 0, r);
+            }
+            logMsg("[" + socket.RemoteEndPoint + " Rx]: " + str + "\r");
+        }
+
+        private byte[] send_format_change(string str)
+        {
+            byte[] buffer;
+            if (hex_send_checkbox.Checked == true)
+            {
+                buffer = HexStringToByteArray(str);
+            }
+            else
+            {
+                buffer = Encoding.UTF8.GetBytes(str);
+            }
+            return buffer;
+        }
+
+        public string ByteToHexString(byte[] bytes, int r)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (bytes != null)
+            {
+                for(int i = 0; i < r; i++ )
+                {
+                    sb.Append(bytes[i].ToString("x2"));
+                }
+            }
+            return sb.ToString();
+        }
+
+        private byte[] HexStringToByteArray(string s)
+        {
+            s = s.Replace(" ", "");
+            if ((s.Length % 2) != 0)
+            {
+                s += " ";
+            }
+            byte[] buffer = new byte[s.Length / 2];
+            for (int i = 0; i < s.Length/2; i++)
+            {
+                buffer[i] = (byte)Convert.ToByte(s.Substring(i*2, 2), 16);
+            }
+            return buffer;
+        }
+
         //客户端数据接收
         void Recive(object obj)
         {
@@ -229,7 +298,7 @@ namespace test_net
             {
                 while (true)
                 {
-                    byte[] buffer = new byte[1024 * 1024 * 3];
+                    byte[] buffer = new byte[1024 * 1024];
                     if (net_connect_state == (int)connect_state.LISTEN)
                     {
                         // 实际接收到的有效字节数
@@ -239,8 +308,7 @@ namespace test_net
                         {
                             break;
                         }
-                        string str = Encoding.UTF8.GetString(buffer, 0, r);
-                        logMsg("[" + socket_receive.RemoteEndPoint + "]:" + str + "\r");
+                        display_format_change(buffer, r);
                     }
                     else if (net_connect_state == (int)connect_state.CONNECT)
                     {
@@ -252,8 +320,7 @@ namespace test_net
                             {
                                 break;
                             }
-                            string str = Encoding.UTF8.GetString(buffer, 0, r);
-                            logMsg("[" + socket.RemoteEndPoint + "]:" + str + "\r");
+                            display_format_change(buffer, r);
                         }
                     }
                 }
@@ -284,7 +351,8 @@ namespace test_net
                     return;
                 }
                 string str = send_box.Text.Trim();
-                byte[] buffer = Encoding.UTF8.GetBytes(str);
+                byte[] buffer = send_format_change(str);
+
                 if (net_connect_state == (int)connect_state.CONNECT)
                 {
                     socket.Send(buffer);
