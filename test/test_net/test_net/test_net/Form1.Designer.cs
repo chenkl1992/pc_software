@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.net_set_Box = new System.Windows.Forms.GroupBox();
             this.net_type_box = new System.Windows.Forms.ComboBox();
             this.port_box = new System.Windows.Forms.TextBox();
@@ -39,7 +40,7 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.send_peri_textBox = new System.Windows.Forms.TextBox();
+            this.send_peri_textbox = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.send_peri_checkbox = new System.Windows.Forms.CheckBox();
             this.hex_send_checkbox = new System.Windows.Forms.CheckBox();
@@ -48,6 +49,7 @@
             this.send_button = new System.Windows.Forms.Button();
             this.send_box = new System.Windows.Forms.TextBox();
             this.recive_box = new System.Windows.Forms.TextBox();
+            this.periodic_send_timer = new System.Windows.Forms.Timer(this.components);
             this.net_set_Box.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -147,7 +149,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.send_peri_textBox);
+            this.groupBox1.Controls.Add(this.send_peri_textbox);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.send_peri_checkbox);
             this.groupBox1.Controls.Add(this.hex_send_checkbox);
@@ -158,22 +160,22 @@
             this.groupBox1.Controls.Add(this.recive_box);
             this.groupBox1.Location = new System.Drawing.Point(193, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(439, 226);
+            this.groupBox1.Size = new System.Drawing.Size(425, 226);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "通信窗口";
             // 
-            // send_peri_textBox
+            // send_peri_textbox
             // 
-            this.send_peri_textBox.Location = new System.Drawing.Point(296, 169);
-            this.send_peri_textBox.Name = "send_peri_textBox";
-            this.send_peri_textBox.Size = new System.Drawing.Size(63, 21);
-            this.send_peri_textBox.TabIndex = 4;
+            this.send_peri_textbox.Location = new System.Drawing.Point(296, 169);
+            this.send_peri_textbox.Name = "send_peri_textbox";
+            this.send_peri_textbox.Size = new System.Drawing.Size(51, 21);
+            this.send_peri_textbox.TabIndex = 4;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(369, 172);
+            this.label4.Location = new System.Drawing.Point(354, 172);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(35, 12);
             this.label4.TabIndex = 4;
@@ -182,12 +184,13 @@
             // send_peri_checkbox
             // 
             this.send_peri_checkbox.AutoSize = true;
-            this.send_peri_checkbox.Location = new System.Drawing.Point(218, 171);
+            this.send_peri_checkbox.Location = new System.Drawing.Point(223, 171);
             this.send_peri_checkbox.Name = "send_peri_checkbox";
             this.send_peri_checkbox.Size = new System.Drawing.Size(72, 16);
             this.send_peri_checkbox.TabIndex = 9;
             this.send_peri_checkbox.Text = "定时发送";
             this.send_peri_checkbox.UseVisualStyleBackColor = true;
+            this.send_peri_checkbox.CheckedChanged += new System.EventHandler(this.send_peri_checkbox_CheckedChanged);
             // 
             // hex_send_checkbox
             // 
@@ -223,7 +226,7 @@
             // 
             // send_button
             // 
-            this.send_button.Location = new System.Drawing.Point(365, 193);
+            this.send_button.Location = new System.Drawing.Point(351, 193);
             this.send_button.Name = "send_button";
             this.send_button.Size = new System.Drawing.Size(65, 24);
             this.send_button.TabIndex = 4;
@@ -235,7 +238,7 @@
             // 
             this.send_box.Location = new System.Drawing.Point(15, 196);
             this.send_box.Name = "send_box";
-            this.send_box.Size = new System.Drawing.Size(344, 21);
+            this.send_box.Size = new System.Drawing.Size(332, 21);
             this.send_box.TabIndex = 1;
             // 
             // recive_box
@@ -244,14 +247,18 @@
             this.recive_box.Multiline = true;
             this.recive_box.Name = "recive_box";
             this.recive_box.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.recive_box.Size = new System.Drawing.Size(415, 141);
+            this.recive_box.Size = new System.Drawing.Size(401, 141);
             this.recive_box.TabIndex = 0;
+            // 
+            // periodic_send_timer
+            // 
+            this.periodic_send_timer.Tick += new System.EventHandler(this.periodic_send_timer_Tick);
             // 
             // net_tool
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(642, 250);
+            this.ClientSize = new System.Drawing.Size(627, 250);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.net_set_Box);
             this.Name = "net_tool";
@@ -281,12 +288,13 @@
         private System.Windows.Forms.Button send_button;
         private System.Windows.Forms.TextBox send_box;
         private System.Windows.Forms.TextBox recive_box;
-        private System.Windows.Forms.TextBox send_peri_textBox;
+        private System.Windows.Forms.TextBox send_peri_textbox;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.CheckBox send_peri_checkbox;
         private System.Windows.Forms.CheckBox hex_send_checkbox;
         private System.Windows.Forms.CheckBox hex_display_checkbox;
         private System.Windows.Forms.Button clear_recive_wind_button;
+        private System.Windows.Forms.Timer periodic_send_timer;
     }
 }
 

@@ -217,7 +217,6 @@ namespace test_net
                     socket_thread_receive.IsBackground = true;
                     socket_thread_receive.Start(server_socket);
                     socket_thread_receive.Name = "server receive";
-
                     socket.BeginAccept(Listen, socket);
                 }
                 //}
@@ -341,7 +340,8 @@ namespace test_net
             clearMsg();
         }
 
-        private void send_button_Click(object sender, EventArgs e)
+        //数据发送
+        private void send()
         {
             //try
             {
@@ -361,8 +361,54 @@ namespace test_net
                 {
                     server_socket.Send(buffer);
                 }
+                logMsg("[Tx]: " + str + "\r");
             }
             //catch { }
+        }
+
+        private void send_peri_checkbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (send_peri_checkbox.Checked == false)
+            {
+                send_peri_textbox.Enabled = true;
+                //若正在周期发送-->停止
+                if (send_button.Enabled == false)
+                {
+                    periodic_send_timer.Enabled = false;
+                    periodic_send_timer.Stop();
+                    send_button.Enabled = true;
+                }
+            }
+            else 
+            {
+                send_peri_textbox.Enabled = false;
+            }
+        }
+
+        private void periodic_send_judge()
+        {
+            if (send_peri_checkbox.Checked == true)
+            {
+                if (send_peri_textbox.Text != "")
+                {
+                    periodic_send_timer.Interval = Convert.ToInt32(send_peri_textbox.Text);
+                    periodic_send_timer.Enabled = true;
+                    periodic_send_timer.Start();
+                    send_button.Enabled = false;
+                }
+            }
+        }
+
+        private void send_button_Click(object sender, EventArgs e)
+        {
+            //判断是否需要周期发送
+            periodic_send_judge();
+            send();
+        }
+
+        private void periodic_send_timer_Tick(object sender, EventArgs e)
+        {
+            send();
         }
     }
 }
