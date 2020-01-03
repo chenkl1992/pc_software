@@ -25,14 +25,6 @@ namespace program_flash
             InitializeComponent();
             Control.CheckForIllegalCrossThreadCalls = false;
             background_init();
-            string line = "";
-            using (StreamReader sr = new StreamReader("test.txt"))
-            {
-                while ((line = sr.ReadLine()) != null)
-                {
-                    Console.WriteLine(line);
-                }
-            }
         }
 
         private void background_init()

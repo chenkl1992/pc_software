@@ -1,0 +1,26 @@
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
+
+//创建socket
+socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+IPAddress ip = IPAddress.Parse(str);
+IPEndPoint point = new IPEndPoint(ip, int);
+//客户端
+socket.Connect(point);
+socket.Receive(buffer);
+socket.Send();
+recive 线程
+
+//服务器
+socket.Bind(point);
+socket.listen(point);
+socket.Accept();
+socket.Receive();
+socket.Send();
+listen 线程
+recive 线程
+
+
+                if (net_connect_state == (int)connect_state.LISTEN)
+                if (net_connect_state == (int)connect_state.CONNECT)
