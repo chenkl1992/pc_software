@@ -329,7 +329,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button send_button;
-        private System.Windows.Forms.TextBox send_box;
+        public System.Windows.Forms.TextBox send_box;
         private System.Windows.Forms.TextBox recive_box;
         private System.Windows.Forms.TextBox send_peri_textbox;
         private System.Windows.Forms.Label label4;

@@ -466,7 +466,18 @@ namespace test_net
 
         private void command_button_Click(object sender, EventArgs e)
         {
-
+            cmd_Form cmd_form = new cmd_Form();
+            cmd_form.send_command += f_add_send_command;
+            cmd_form.Show();
+            //cmd_form.Close();
         }
+
+        void f_add_send_command(string str)
+        {
+            send_box.Text = str;
+            send();
+        }
+
+
     }
 }

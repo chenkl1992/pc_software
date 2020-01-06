@@ -21,6 +21,13 @@ socket.Send();
 listen 线程
 recive 线程
 
+2020/01/06
+添加窗体 --> 项目->添加窗体
+跨窗体交互--使用委托
 
-                if (net_connect_state == (int)connect_state.LISTEN)
-                if (net_connect_state == (int)connect_state.CONNECT)
+委托是一个类，它定义了方法的类型，使得可以将方法当作另一个方法的参数来进行传递
+1. 声明。delegate void f1()
+2. 实例化委托，添加方法
+3. 使用委托 调用方法
+
+声明一个事件类似于声明一个进行了封装的委托类型的变量
