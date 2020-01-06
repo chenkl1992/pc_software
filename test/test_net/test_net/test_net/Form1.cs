@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.IO;
 
 namespace test_net
 {
@@ -434,6 +435,38 @@ namespace test_net
         private void clearScreenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             clearMsg();
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveDlg = new SaveFileDialog();
+            saveDlg.Filter = "文本文件|*.txt";
+            if (saveDlg.ShowDialog() == DialogResult.OK)
+            {
+                // 创建文件，将recive_box 中的内容保存到文件中
+                // saveDlg.FileName 是用户指定的文件路径
+                FileStream fs = File.Open(saveDlg.FileName,
+                    FileMode.Create,
+                    FileAccess.Write);
+                StreamWriter sw = new StreamWriter(fs);
+
+                // 保存recive_box 中所有内容（所有行)
+                foreach (string line in recive_box.Lines)
+                {
+                    sw.WriteLine(line);
+                }
+                //关闭文件
+                sw.Flush();
+                sw.Close();
+                fs.Close();
+                // 提示用户：文件保存的位置和文件名
+                MessageBox.Show("文件已成功保存到" + saveDlg.FileName);
+            }
+        }
+
+        private void command_button_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

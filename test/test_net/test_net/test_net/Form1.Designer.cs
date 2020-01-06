@@ -51,10 +51,10 @@
             this.send_box = new System.Windows.Forms.TextBox();
             this.recive_box = new System.Windows.Forms.TextBox();
             this.receive_box_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.periodic_send_timer = new System.Windows.Forms.Timer(this.components);
-            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.periodic_send_timer = new System.Windows.Forms.Timer(this.components);
+            this.command_button = new System.Windows.Forms.Button();
             this.net_set_Box.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.receive_box_contextMenuStrip.SuspendLayout();
@@ -155,6 +155,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.command_button);
             this.groupBox1.Controls.Add(this.send_peri_textbox);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.send_peri_checkbox);
@@ -173,7 +174,7 @@
             // 
             // send_peri_textbox
             // 
-            this.send_peri_textbox.Location = new System.Drawing.Point(296, 169);
+            this.send_peri_textbox.Location = new System.Drawing.Point(330, 168);
             this.send_peri_textbox.Name = "send_peri_textbox";
             this.send_peri_textbox.Size = new System.Drawing.Size(51, 21);
             this.send_peri_textbox.TabIndex = 4;
@@ -181,7 +182,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(354, 172);
+            this.label4.Location = new System.Drawing.Point(383, 172);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(35, 12);
             this.label4.TabIndex = 4;
@@ -190,7 +191,7 @@
             // send_peri_checkbox
             // 
             this.send_peri_checkbox.AutoSize = true;
-            this.send_peri_checkbox.Location = new System.Drawing.Point(223, 171);
+            this.send_peri_checkbox.Location = new System.Drawing.Point(262, 171);
             this.send_peri_checkbox.Name = "send_peri_checkbox";
             this.send_peri_checkbox.Size = new System.Drawing.Size(72, 16);
             this.send_peri_checkbox.TabIndex = 9;
@@ -201,7 +202,7 @@
             // hex_send_checkbox
             // 
             this.hex_send_checkbox.AutoSize = true;
-            this.hex_send_checkbox.Location = new System.Drawing.Point(148, 171);
+            this.hex_send_checkbox.Location = new System.Drawing.Point(196, 171);
             this.hex_send_checkbox.Name = "hex_send_checkbox";
             this.hex_send_checkbox.Size = new System.Drawing.Size(66, 16);
             this.hex_send_checkbox.TabIndex = 7;
@@ -212,7 +213,7 @@
             // hex_display_checkbox
             // 
             this.hex_display_checkbox.AutoSize = true;
-            this.hex_display_checkbox.Location = new System.Drawing.Point(79, 171);
+            this.hex_display_checkbox.Location = new System.Drawing.Point(131, 171);
             this.hex_display_checkbox.Name = "hex_display_checkbox";
             this.hex_display_checkbox.Size = new System.Drawing.Size(66, 16);
             this.hex_display_checkbox.TabIndex = 6;
@@ -224,7 +225,7 @@
             // 
             this.clear_recive_wind_button.Location = new System.Drawing.Point(15, 167);
             this.clear_recive_wind_button.Name = "clear_recive_wind_button";
-            this.clear_recive_wind_button.Size = new System.Drawing.Size(54, 23);
+            this.clear_recive_wind_button.Size = new System.Drawing.Size(46, 23);
             this.clear_recive_wind_button.TabIndex = 5;
             this.clear_recive_wind_button.Text = "清除";
             this.clear_recive_wind_button.UseVisualStyleBackColor = true;
@@ -260,36 +261,40 @@
             // receive_box_contextMenuStrip
             // 
             this.receive_box_contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.copyToolStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.clearScreenToolStripMenuItem});
             this.receive_box_contextMenuStrip.Name = "receive_box_contextMenuStrip";
-            this.receive_box_contextMenuStrip.Size = new System.Drawing.Size(181, 92);
-            // 
-            // periodic_send_timer
-            // 
-            this.periodic_send_timer.Tick += new System.EventHandler(this.periodic_send_timer_Tick);
-            // 
-            // copyToolStripMenuItem
-            // 
-            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.copyToolStripMenuItem.Text = "copy";
+            this.receive_box_contextMenuStrip.Size = new System.Drawing.Size(147, 48);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveAsToolStripMenuItem.Image")));
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.saveAsToolStripMenuItem.Text = "save as";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // clearScreenToolStripMenuItem
             // 
             this.clearScreenToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("clearScreenToolStripMenuItem.Image")));
             this.clearScreenToolStripMenuItem.Name = "clearScreenToolStripMenuItem";
-            this.clearScreenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.clearScreenToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.clearScreenToolStripMenuItem.Text = "clear screen";
             this.clearScreenToolStripMenuItem.Click += new System.EventHandler(this.clearScreenToolStripMenuItem_Click);
+            // 
+            // periodic_send_timer
+            // 
+            this.periodic_send_timer.Tick += new System.EventHandler(this.periodic_send_timer_Tick);
+            // 
+            // command_button
+            // 
+            this.command_button.Location = new System.Drawing.Point(70, 167);
+            this.command_button.Name = "command_button";
+            this.command_button.Size = new System.Drawing.Size(46, 23);
+            this.command_button.TabIndex = 10;
+            this.command_button.Text = "命令";
+            this.command_button.UseVisualStyleBackColor = true;
+            this.command_button.Click += new System.EventHandler(this.command_button_Click);
             // 
             // net_tool
             // 
@@ -334,9 +339,9 @@
         private System.Windows.Forms.Button clear_recive_wind_button;
         private System.Windows.Forms.Timer periodic_send_timer;
         private System.Windows.Forms.ContextMenuStrip receive_box_contextMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearScreenToolStripMenuItem;
+        private System.Windows.Forms.Button command_button;
     }
 }
 
