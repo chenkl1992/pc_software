@@ -28,7 +28,8 @@ namespace test_net
 
         //客户端
         //将远程连接的客户端的IP地址和Socket存入集合中
-        Dictionary<string, Socket> dicSocket = new Dictionary<string, Socket>();
+        Dictionary<string, Socket> clientSocket = new Dictionary<string, Socket>();
+        Dictionary<string, Thread> clientThread = new Dictionary<string, Thread>();
         //服务器
 
         public net_tool()
@@ -46,6 +47,10 @@ namespace test_net
         //log 打印
         private void logMsg(string str)
         {
+            if (time_stamp_checkbox.Checked == true)
+            {
+                recive_box.AppendText(DateTime.Now.ToLocalTime().ToString() + " ");
+            }
             recive_box.AppendText(str + "\r\n");
             recive_box.ScrollToCaret();
         }
@@ -69,6 +74,9 @@ namespace test_net
 
             //端口号
             port_box.Text = "6000";
+
+            //此时无客户端连接
+            clear_client_info();
         }
 
         //获取本机ip地址
@@ -130,25 +138,63 @@ namespace test_net
                 {
                     if (net_connect_state == (int)connect_state.ABORT)
                     {
-                        if(server_socket != null)
-                        {
-                            server_socket.Shutdown(SocketShutdown.Both);
-                        }
-                        socket.Close();
-                        socket = null;
-                        //server_socket.Close();
-                        //server_socket = null;
+                        server_socket_close();
                     }
                     else if (net_connect_state == (int)connect_state.DISCONNECT)
                     {
-                        socket_thread_receive.Abort();
-                        socket.Close();
-                        socket = null;
+                        client_socket_close();
                     }
                     logMsg("关闭");
                 }
             }
             //catch { }
+        }
+
+        //服务器端关闭
+        private void server_socket_close()
+        {
+            periodic_state_change();
+            if (server_socket != null)
+            {
+                server_socket.Shutdown(SocketShutdown.Both);
+            }
+            //客户端清除
+            client_list_combobox.Items.Clear();
+            clientSocket.Clear();
+            clientThread.Clear();
+
+            //服务器清除
+            socket.Close();
+            socket = null;
+        }
+
+        //服务器所连接的客户端socket关闭
+        private void server_connected_close()
+        {
+            if (client_list_combobox.SelectedItem != null)
+            {
+                string ip = client_list_combobox.SelectedItem.ToString();
+                int idx = client_list_combobox.SelectedIndex;
+
+                //socket 清除
+                clientSocket[ip].Close();
+                clientSocket[ip] = null;
+                clientSocket.Remove(ip);
+
+                //接收 thread 清除 
+                clientThread[ip].Abort();
+                clientThread.Remove(ip);
+
+                client_list_combobox.Items.RemoveAt(idx);
+            }
+        }
+
+        //客户端关闭
+        private void client_socket_close()
+        {
+            socket_thread_receive.Abort();
+            socket.Close();
+            socket = null;
         }
 
         private void net_type_box_SelectedIndexChanged(object sender, EventArgs e)
@@ -205,6 +251,8 @@ namespace test_net
                 port_box.Enabled = true;
                 ip_box.Enabled = true;
                 net_type_box.Enabled = true;
+
+                clear_client_info();
             }
         }
 
@@ -218,20 +266,43 @@ namespace test_net
                 if (socket != null)
                 {
                     server_socket = socket.EndAccept(ar);
-                    // 将远程连接的客户端的IP地址和Socket存入集合中
-                    //dicSocket.Add(socketSend.RemoteEndPoint.ToString(),socketSend);
-                    //comboBox1.Items.Add(socketSend.RemoteEndPoint.ToString());
-                    logMsg(server_socket.RemoteEndPoint.ToString() + ":" + "连接");
-                    // 客户端连接成功之后，服务器应该接受客户端发来的消息
-                    socket_thread_receive = new Thread(Recive);
-                    socket_thread_receive.IsBackground = true;
-                    socket_thread_receive.Start(server_socket);
-                    socket_thread_receive.Name = "server receive";
+
+                    add_client_info(server_socket);
                     socket.BeginAccept(Listen, socket);
                 }
                 //}
                 //catch { }
             //}     
+        }
+
+        private void add_client_info(Socket s)
+        {
+            // 将远程连接的客户端的IP地址和Socket存入集合中
+            clientSocket.Add(s.RemoteEndPoint.ToString(), server_socket);
+            client_list_combobox.Items.Add(s.RemoteEndPoint.ToString());
+
+            logMsg(server_socket.RemoteEndPoint.ToString() + ":" + "连接");
+            // 客户端连接成功之后，服务器应该接受客户端发来的消息
+            socket_thread_receive = new Thread(Recive);
+            socket_thread_receive.IsBackground = true;
+            socket_thread_receive.Start(server_socket);
+            socket_thread_receive.Name = "server receive";
+
+            clientThread.Add(s.RemoteEndPoint.ToString(), socket_thread_receive);
+
+            if (client_groupbox.Visible == false)
+            {
+                //显示界面变化
+                recive_box.Height = 105;
+                client_groupbox.Visible = true;
+                client_list_combobox.SelectedIndex = 0;
+            }
+        }
+
+        private void clear_client_info()
+        {
+            recive_box.Height = 140;
+            client_groupbox.Visible = false;
         }
 
         private void hex_send_checkbox_CheckedChanged(object sender, EventArgs e)
@@ -244,7 +315,7 @@ namespace test_net
 
         }
 
-        private void display_format_change(byte[] bytes, int r)
+        private void display_format_change(byte[] bytes, int r, Socket socket_receive)
         {
             string str;
             if (hex_display_checkbox.Checked == true)
@@ -255,7 +326,7 @@ namespace test_net
             {
                 str = Encoding.UTF8.GetString(bytes, 0, r);
             }
-            logMsg("[" + socket.RemoteEndPoint + " Rx]: " + str + "\r");
+            logMsg("[" + socket_receive.RemoteEndPoint + " Rx]: " + str + "\r");
         }
 
         private byte[] send_format_change(string str)
@@ -303,6 +374,7 @@ namespace test_net
         //客户端数据接收
         void Recive(object obj)
         {
+            Socket socket_receive = obj as Socket;
             //try
             {
                 while (true)
@@ -311,13 +383,19 @@ namespace test_net
                     if (net_connect_state == (int)connect_state.LISTEN)
                     {
                         // 实际接收到的有效字节数
-                        Socket socket_receive = obj as Socket;
-                        int r = socket_receive.Receive(buffer);
-                        if (r == 0)
+                        //try
                         {
-                            break;
+                            int r = socket_receive.Receive(buffer);
+                            if (r == 0)
+                            {
+                                break;
+                            }
+                            display_format_change(buffer, r, socket_receive);
                         }
-                        display_format_change(buffer, r);
+                        //catch
+                        {
+                            //socket_thread_receive.Abort();
+                        }
                     }
                     else if (net_connect_state == (int)connect_state.CONNECT)
                     {
@@ -329,7 +407,7 @@ namespace test_net
                             {
                                 break;
                             }
-                            display_format_change(buffer, r);
+                            display_format_change(buffer, r, socket_receive);
                         }
                     }
                 }
@@ -369,7 +447,15 @@ namespace test_net
                 }
                 else if (net_connect_state == (int)connect_state.LISTEN)
                 {
-                    server_socket.Send(buffer);
+                    string ip = client_list_combobox.SelectedItem.ToString();
+                    try
+                    {
+                        clientSocket[ip].Send(buffer);
+                    }
+                    catch 
+                    {
+                        logMsg("发送失败！");
+                    }
                 }
                 logMsg("[Tx]: " + str + "\r");
             }
@@ -389,6 +475,7 @@ namespace test_net
                 if (send_button.Enabled == false)
                 {
                     periodic_send_timer.Enabled = false;
+                    send_peri_checkbox.Checked = false;
                     periodic_send_timer.Stop();
                     send_button.Enabled = true;
                 }
@@ -478,6 +565,9 @@ namespace test_net
             send();
         }
 
-
+        private void discon_client_button_Click(object sender, EventArgs e)
+        {
+            server_connected_close();
+        }
     }
 }

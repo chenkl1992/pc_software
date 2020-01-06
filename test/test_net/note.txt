@@ -31,3 +31,5 @@ recive 线程
 3. 使用委托 调用方法
 
 声明一个事件类似于声明一个进行了封装的委托类型的变量
+
+                    clientThread.Add(s.RemoteEndPoint.ToString(), )

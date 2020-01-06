@@ -41,6 +41,11 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.client_groupbox = new System.Windows.Forms.GroupBox();
+            this.client_list_combobox = new System.Windows.Forms.ComboBox();
+            this.discon_client_button = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.command_button = new System.Windows.Forms.Button();
             this.send_peri_textbox = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.send_peri_checkbox = new System.Windows.Forms.CheckBox();
@@ -54,9 +59,10 @@
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.periodic_send_timer = new System.Windows.Forms.Timer(this.components);
-            this.command_button = new System.Windows.Forms.Button();
+            this.time_stamp_checkbox = new System.Windows.Forms.CheckBox();
             this.net_set_Box.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.client_groupbox.SuspendLayout();
             this.receive_box_contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -155,7 +161,8 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.command_button);
+            this.groupBox1.Controls.Add(this.time_stamp_checkbox);
+            this.groupBox1.Controls.Add(this.client_groupbox);
             this.groupBox1.Controls.Add(this.send_peri_textbox);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.send_peri_checkbox);
@@ -165,24 +172,75 @@
             this.groupBox1.Controls.Add(this.send_button);
             this.groupBox1.Controls.Add(this.send_box);
             this.groupBox1.Controls.Add(this.recive_box);
-            this.groupBox1.Location = new System.Drawing.Point(193, 12);
+            this.groupBox1.Location = new System.Drawing.Point(192, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(425, 226);
+            this.groupBox1.Size = new System.Drawing.Size(429, 226);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "通信窗口";
             // 
+            // client_groupbox
+            // 
+            this.client_groupbox.Controls.Add(this.client_list_combobox);
+            this.client_groupbox.Controls.Add(this.discon_client_button);
+            this.client_groupbox.Controls.Add(this.label5);
+            this.client_groupbox.Location = new System.Drawing.Point(15, 125);
+            this.client_groupbox.Margin = new System.Windows.Forms.Padding(1);
+            this.client_groupbox.Name = "client_groupbox";
+            this.client_groupbox.Padding = new System.Windows.Forms.Padding(1);
+            this.client_groupbox.Size = new System.Drawing.Size(400, 35);
+            this.client_groupbox.TabIndex = 11;
+            this.client_groupbox.TabStop = false;
+            // 
+            // client_list_combobox
+            // 
+            this.client_list_combobox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.client_list_combobox.FormattingEnabled = true;
+            this.client_list_combobox.Location = new System.Drawing.Point(55, 11);
+            this.client_list_combobox.Name = "client_list_combobox";
+            this.client_list_combobox.Size = new System.Drawing.Size(277, 20);
+            this.client_list_combobox.TabIndex = 2;
+            // 
+            // discon_client_button
+            // 
+            this.discon_client_button.Location = new System.Drawing.Point(340, 10);
+            this.discon_client_button.Name = "discon_client_button";
+            this.discon_client_button.Size = new System.Drawing.Size(55, 20);
+            this.discon_client_button.TabIndex = 1;
+            this.discon_client_button.Text = "断开";
+            this.discon_client_button.UseVisualStyleBackColor = true;
+            this.discon_client_button.Click += new System.EventHandler(this.discon_client_button_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(5, 15);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(47, 12);
+            this.label5.TabIndex = 0;
+            this.label5.Text = "客户端:";
+            // 
+            // command_button
+            // 
+            this.command_button.Location = new System.Drawing.Point(69, 206);
+            this.command_button.Name = "command_button";
+            this.command_button.Size = new System.Drawing.Size(46, 23);
+            this.command_button.TabIndex = 10;
+            this.command_button.Text = "命令";
+            this.command_button.UseVisualStyleBackColor = true;
+            this.command_button.Click += new System.EventHandler(this.command_button_Click);
+            // 
             // send_peri_textbox
             // 
-            this.send_peri_textbox.Location = new System.Drawing.Point(330, 168);
+            this.send_peri_textbox.Location = new System.Drawing.Point(337, 168);
             this.send_peri_textbox.Name = "send_peri_textbox";
-            this.send_peri_textbox.Size = new System.Drawing.Size(51, 21);
+            this.send_peri_textbox.Size = new System.Drawing.Size(50, 21);
             this.send_peri_textbox.TabIndex = 4;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(383, 172);
+            this.label4.Location = new System.Drawing.Point(387, 172);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(35, 12);
             this.label4.TabIndex = 4;
@@ -191,7 +249,7 @@
             // send_peri_checkbox
             // 
             this.send_peri_checkbox.AutoSize = true;
-            this.send_peri_checkbox.Location = new System.Drawing.Point(262, 171);
+            this.send_peri_checkbox.Location = new System.Drawing.Point(268, 170);
             this.send_peri_checkbox.Name = "send_peri_checkbox";
             this.send_peri_checkbox.Size = new System.Drawing.Size(72, 16);
             this.send_peri_checkbox.TabIndex = 9;
@@ -202,7 +260,7 @@
             // hex_send_checkbox
             // 
             this.hex_send_checkbox.AutoSize = true;
-            this.hex_send_checkbox.Location = new System.Drawing.Point(196, 171);
+            this.hex_send_checkbox.Location = new System.Drawing.Point(131, 170);
             this.hex_send_checkbox.Name = "hex_send_checkbox";
             this.hex_send_checkbox.Size = new System.Drawing.Size(66, 16);
             this.hex_send_checkbox.TabIndex = 7;
@@ -213,7 +271,7 @@
             // hex_display_checkbox
             // 
             this.hex_display_checkbox.AutoSize = true;
-            this.hex_display_checkbox.Location = new System.Drawing.Point(131, 171);
+            this.hex_display_checkbox.Location = new System.Drawing.Point(68, 170);
             this.hex_display_checkbox.Name = "hex_display_checkbox";
             this.hex_display_checkbox.Size = new System.Drawing.Size(66, 16);
             this.hex_display_checkbox.TabIndex = 6;
@@ -255,7 +313,7 @@
             this.recive_box.Multiline = true;
             this.recive_box.Name = "recive_box";
             this.recive_box.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.recive_box.Size = new System.Drawing.Size(401, 141);
+            this.recive_box.Size = new System.Drawing.Size(400, 140);
             this.recive_box.TabIndex = 0;
             // 
             // receive_box_contextMenuStrip
@@ -286,22 +344,23 @@
             // 
             this.periodic_send_timer.Tick += new System.EventHandler(this.periodic_send_timer_Tick);
             // 
-            // command_button
+            // time_stamp_checkbox
             // 
-            this.command_button.Location = new System.Drawing.Point(70, 167);
-            this.command_button.Name = "command_button";
-            this.command_button.Size = new System.Drawing.Size(46, 23);
-            this.command_button.TabIndex = 10;
-            this.command_button.Text = "命令";
-            this.command_button.UseVisualStyleBackColor = true;
-            this.command_button.Click += new System.EventHandler(this.command_button_Click);
+            this.time_stamp_checkbox.AutoSize = true;
+            this.time_stamp_checkbox.Location = new System.Drawing.Point(196, 170);
+            this.time_stamp_checkbox.Name = "time_stamp_checkbox";
+            this.time_stamp_checkbox.Size = new System.Drawing.Size(72, 16);
+            this.time_stamp_checkbox.TabIndex = 1;
+            this.time_stamp_checkbox.Text = "显示时间";
+            this.time_stamp_checkbox.UseVisualStyleBackColor = true;
             // 
             // net_tool
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(627, 250);
+            this.ClientSize = new System.Drawing.Size(635, 250);
             this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.command_button);
             this.Controls.Add(this.net_set_Box);
             this.Name = "net_tool";
             this.Text = "网络调试";
@@ -310,6 +369,8 @@
             this.net_set_Box.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.client_groupbox.ResumeLayout(false);
+            this.client_groupbox.PerformLayout();
             this.receive_box_contextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -342,6 +403,11 @@
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearScreenToolStripMenuItem;
         private System.Windows.Forms.Button command_button;
+        private System.Windows.Forms.GroupBox client_groupbox;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ComboBox client_list_combobox;
+        private System.Windows.Forms.Button discon_client_button;
+        private System.Windows.Forms.CheckBox time_stamp_checkbox;
     }
 }
 
