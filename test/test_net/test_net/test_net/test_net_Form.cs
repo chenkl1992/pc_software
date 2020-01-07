@@ -17,7 +17,7 @@ namespace test_net
     public partial class net_tool : Form
     {
         //连接
-        enum connect_state { CONNECT, DISCONNECT, LISTEN, ABORT };
+        enum connect_state { CONNECT, DISCONNECT, LISTEN, ABORT, UDP_CONNECT, UDP_DISCON };
         //enum role_state { SERVER, CLIENT, UDP };
         int net_connect_state = (int)connect_state.ABORT;
         //int ne_role_state = (int)role_state.SERVER;
@@ -30,6 +30,7 @@ namespace test_net
         //将远程连接的客户端的IP地址和Socket存入集合中
         Dictionary<string, Socket> clientSocket = new Dictionary<string, Socket>();
         Dictionary<string, Thread> clientThread = new Dictionary<string, Thread>();
+        Dictionary<int, string> udpList = new Dictionary<int, string>();
         //服务器
 
         public net_tool()
@@ -134,6 +135,26 @@ namespace test_net
                         logMsg("未找到服务器！");
                     }
                 }
+                else if (net_connect_state == (int)connect_state.UDP_CONNECT)
+                {
+                    socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                    IPAddress ip = IPAddress.Parse(ip_box.Text.Trim());
+                    IPEndPoint point = new IPEndPoint(ip, Convert.ToInt32(port_box.Text.Trim()));
+                    socket_thread_receive = new Thread(Recive);
+                    socket_thread_receive.IsBackground = true;
+                    try
+                    {
+                        socket.Bind(point);
+                        logMsg("udp 绑定成功！");
+                        socket_thread_receive.Start();
+                    }
+                    catch
+                    {
+                        net_state_change();
+                        socket_init();
+                        logMsg("该端口已被占用！");
+                    }
+                }
                 else
                 {
                     if (net_connect_state == (int)connect_state.ABORT)
@@ -141,6 +162,10 @@ namespace test_net
                         server_socket_close();
                     }
                     else if (net_connect_state == (int)connect_state.DISCONNECT)
+                    {
+                        client_socket_close();
+                    }
+                    else if (net_connect_state == (int)connect_state.UDP_DISCON)
                     {
                         client_socket_close();
                     }
@@ -159,7 +184,7 @@ namespace test_net
                 server_socket.Shutdown(SocketShutdown.Both);
             }
             //客户端清除
-            client_list_combobox.Items.Clear();
+            clear_list_combobox();
             clientSocket.Clear();
             clientThread.Clear();
 
@@ -205,11 +230,33 @@ namespace test_net
                 net_connect_state = (int)connect_state.LISTEN;
             }
             //TCP Client UDP
-            else 
+            else if(net_type_box.SelectedIndex == 1)
             {
                 net_connect_state = (int)connect_state.CONNECT;
             }
+            else if(net_type_box.SelectedIndex == 2)
+            {
+                net_connect_state = (int)connect_state.UDP_CONNECT;
+            }
             net_state_change();
+        }
+
+        private void netsetting_display(bool i)
+        {
+            if (i == true)
+            {
+                net_connect_button.BackColor = System.Drawing.Color.LightGreen;
+                port_box.Enabled = true;
+                ip_box.Enabled = true;
+                net_type_box.Enabled = true;
+            }
+            else 
+            {
+                net_connect_button.BackColor = System.Drawing.Color.Tomato;
+                port_box.Enabled = false;
+                ip_box.Enabled = false;
+                net_type_box.Enabled = false;
+            }
         }
 
         //改变 状态
@@ -220,38 +267,39 @@ namespace test_net
             {
                 net_connect_state = (int)connect_state.CONNECT;
                 net_connect_button.Text = "断开连接";
-                net_connect_button.BackColor = System.Drawing.Color.Tomato;
-                port_box.Enabled = false;
-                ip_box.Enabled = false;
-                net_type_box.Enabled = false;
+                netsetting_display(false);
             }
             else if (net_connect_state == (int)connect_state.CONNECT)
             {
                 net_connect_state = (int)connect_state.DISCONNECT;
                 net_connect_button.Text = "连接";
-                net_connect_button.BackColor = System.Drawing.Color.LightGreen;
-                port_box.Enabled = true;
-                ip_box.Enabled = true;
-                net_type_box.Enabled = true;
+                netsetting_display(true);
+            }
+            else if (net_connect_state == (int)connect_state.UDP_DISCON)
+            {
+                net_connect_state = (int)connect_state.UDP_CONNECT;
+                net_connect_button.Text = "断开连接";
+                netsetting_display(false);
+                add_udp_info();
+            }
+            else if (net_connect_state == (int)connect_state.UDP_CONNECT)
+            {
+                net_connect_state = (int)connect_state.UDP_DISCON;
+                net_connect_button.Text = "udp绑定";
+                netsetting_display(true);
+                clear_client_info();
             }
             else if (net_connect_state == (int)connect_state.ABORT)
             {
                 net_connect_state = (int)connect_state.LISTEN;
                 net_connect_button.Text = "终止";
-                net_connect_button.BackColor = System.Drawing.Color.Tomato;
-                port_box.Enabled = false;
-                ip_box.Enabled = false;
-                net_type_box.Enabled = false;
+                netsetting_display(false);
             }
             else if (net_connect_state == (int)connect_state.LISTEN)
             {
                 net_connect_state = (int)connect_state.ABORT;
                 net_connect_button.Text = "监听";
-                net_connect_button.BackColor = System.Drawing.Color.LightGreen;
-                port_box.Enabled = true;
-                ip_box.Enabled = true;
-                net_type_box.Enabled = true;
-
+                netsetting_display(true);
                 clear_client_info();
             }
         }
@@ -295,7 +343,20 @@ namespace test_net
                 //显示界面变化
                 recive_box.Height = 105;
                 client_groupbox.Visible = true;
+                client_list_combobox.DropDownStyle = ComboBoxStyle.DropDownList;
                 client_list_combobox.SelectedIndex = 0;
+            }
+        }
+
+        private void add_udp_info()
+        {
+            if (client_groupbox.Visible == false)
+            {
+                //显示界面变化
+                recive_box.Height = 105;
+                client_groupbox.Visible = true;
+                client_list_combobox.DropDownStyle = ComboBoxStyle.DropDown;
+                discon_client_button.Text = "清除";
             }
         }
 
@@ -303,6 +364,7 @@ namespace test_net
         {
             recive_box.Height = 140;
             client_groupbox.Visible = false;
+            discon_client_button.Text = "断开";
         }
 
         private void hex_send_checkbox_CheckedChanged(object sender, EventArgs e)
@@ -313,6 +375,20 @@ namespace test_net
         private void hex_display_checkbox_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void display_format_change_udp(byte[] bytes, int r, EndPoint point)
+        {
+            string str;
+            if (hex_display_checkbox.Checked == true)
+            {
+                str = ByteToHexString(bytes, r);
+            }
+            else
+            {
+                str = Encoding.UTF8.GetString(bytes, 0, r);
+            }
+            logMsg("[" + point.ToString() + " Rx]: " + str + "\r");
         }
 
         private void display_format_change(byte[] bytes, int r, Socket socket_receive)
@@ -382,20 +458,12 @@ namespace test_net
                     byte[] buffer = new byte[1024 * 1024];
                     if (net_connect_state == (int)connect_state.LISTEN)
                     {
-                        // 实际接收到的有效字节数
-                        //try
+                        int r = socket_receive.Receive(buffer);
+                        if (r == 0)
                         {
-                            int r = socket_receive.Receive(buffer);
-                            if (r == 0)
-                            {
-                                break;
-                            }
-                            display_format_change(buffer, r, socket_receive);
+                            break;
                         }
-                        //catch
-                        {
-                            //socket_thread_receive.Abort();
-                        }
+                        display_format_change(buffer, r, socket_receive);
                     }
                     else if (net_connect_state == (int)connect_state.CONNECT)
                     {
@@ -409,6 +477,36 @@ namespace test_net
                             }
                             display_format_change(buffer, r, socket_receive);
                         }
+                    }
+                    else if (net_connect_state == (int)connect_state.UDP_CONNECT)
+                    {
+                        EndPoint point = new IPEndPoint(IPAddress.Any, 0);
+                        int r = socket.ReceiveFrom(buffer, ref point);
+
+                        if (client_list_combobox.Items.Count == 0)
+                        {
+                            udpList.Add(client_list_combobox.Items.Count, point.ToString());
+                            client_list_combobox.Items.Add(point.ToString());
+                            client_list_combobox.SelectedIndex = 0;
+                        }
+                        else 
+                        {
+                            //若不重复， 添加到列表中
+                            bool udp_list_no_repeat = true;
+                            for (int i = 0; i < client_list_combobox.Items.Count; i++)
+                            {
+                                if (udpList[i].Equals(point.ToString()) == true)
+                                {
+                                    udp_list_no_repeat = false;
+                                }
+                            }
+                            if (udp_list_no_repeat == true)
+                            {
+                                udpList.Add(client_list_combobox.Items.Count, point.ToString());
+                                client_list_combobox.Items.Add(point.ToString());
+                            }
+                        }
+                        display_format_change_udp(buffer, r, point);
                     }
                 }
             }
@@ -443,7 +541,14 @@ namespace test_net
 
                 if (net_connect_state == (int)connect_state.CONNECT)
                 {
-                    socket.Send(buffer);
+                    try
+                    {
+                        socket.Send(buffer);
+                    }
+                    catch
+                    {
+                        logMsg("客户端 发送失败！");
+                    }
                 }
                 else if (net_connect_state == (int)connect_state.LISTEN)
                 {
@@ -454,10 +559,34 @@ namespace test_net
                     }
                     catch 
                     {
-                        logMsg("发送失败！");
+                        logMsg("服务器 发送失败！");
                     }
                 }
-                logMsg("[Tx]: " + str + "\r");
+                else if(net_connect_state == (int)connect_state.UDP_CONNECT)
+                {
+                    string point_str = client_list_combobox.Text.ToString();
+                    point_str = point_str.Replace(" ", "");
+                    int off_set = 0;
+                    off_set = point_str.IndexOf(":");
+                    if (off_set != 0)
+                    {
+                        string port = point_str.Substring(off_set + 1);
+                        string add = point_str.Substring(0, off_set);
+                        EndPoint point = new IPEndPoint(IPAddress.Parse(add), int.Parse(port));
+                        try
+                        {
+                            socket.SendTo(buffer, point);
+                        }
+                        catch
+                        {
+                            logMsg("udp 发送失败！");
+                        }
+                    }
+                }
+                if (display_send_checkbox.Checked == true)
+                {
+                    logMsg("[Tx]: " + str + "\r");
+                }
             }
             catch 
             {
@@ -565,9 +694,26 @@ namespace test_net
             send();
         }
 
+        private void clear_list_combobox()
+        {
+            client_list_combobox.Text = "";
+            if (client_list_combobox.SelectedItem != null)
+            {
+                client_list_combobox.Items.Clear();
+                udpList.Clear();
+            }
+        }
+
         private void discon_client_button_Click(object sender, EventArgs e)
         {
-            server_connected_close();
+            if (net_connect_state == (int)connect_state.CONNECT)
+            {
+                server_connected_close();
+            }
+            else if (net_connect_state == (int)connect_state.UDP_CONNECT)
+            {
+                clear_list_combobox();
+            }
         }
     }
 }
