@@ -41,17 +41,17 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.send_peri_textbox = new System.Windows.Forms.TextBox();
+            this.send_peri_checkbox = new System.Windows.Forms.CheckBox();
             this.time_stamp_checkbox = new System.Windows.Forms.CheckBox();
+            this.hex_send_checkbox = new System.Windows.Forms.CheckBox();
+            this.display_send_checkbox = new System.Windows.Forms.CheckBox();
             this.client_groupbox = new System.Windows.Forms.GroupBox();
             this.client_list_combobox = new System.Windows.Forms.ComboBox();
             this.discon_client_button = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
-            this.send_peri_textbox = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.send_peri_checkbox = new System.Windows.Forms.CheckBox();
-            this.hex_send_checkbox = new System.Windows.Forms.CheckBox();
             this.hex_display_checkbox = new System.Windows.Forms.CheckBox();
-            this.clear_recive_wind_button = new System.Windows.Forms.Button();
             this.send_button = new System.Windows.Forms.Button();
             this.send_box = new System.Windows.Forms.TextBox();
             this.recive_box = new System.Windows.Forms.TextBox();
@@ -60,11 +60,13 @@
             this.clearScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.command_button = new System.Windows.Forms.Button();
             this.periodic_send_timer = new System.Windows.Forms.Timer(this.components);
-            this.display_send_checkbox = new System.Windows.Forms.CheckBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.ascii_button = new System.Windows.Forms.Button();
             this.net_set_Box.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.client_groupbox.SuspendLayout();
             this.receive_box_contextMenuStrip.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // net_set_Box
@@ -180,6 +182,24 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "通信窗口";
             // 
+            // send_peri_textbox
+            // 
+            this.send_peri_textbox.Location = new System.Drawing.Point(349, 168);
+            this.send_peri_textbox.Name = "send_peri_textbox";
+            this.send_peri_textbox.Size = new System.Drawing.Size(38, 21);
+            this.send_peri_textbox.TabIndex = 4;
+            // 
+            // send_peri_checkbox
+            // 
+            this.send_peri_checkbox.AutoSize = true;
+            this.send_peri_checkbox.Location = new System.Drawing.Point(281, 170);
+            this.send_peri_checkbox.Name = "send_peri_checkbox";
+            this.send_peri_checkbox.Size = new System.Drawing.Size(72, 16);
+            this.send_peri_checkbox.TabIndex = 9;
+            this.send_peri_checkbox.Text = "定时发送";
+            this.send_peri_checkbox.UseVisualStyleBackColor = true;
+            this.send_peri_checkbox.CheckedChanged += new System.EventHandler(this.send_peri_checkbox_CheckedChanged);
+            // 
             // time_stamp_checkbox
             // 
             this.time_stamp_checkbox.AutoSize = true;
@@ -189,6 +209,27 @@
             this.time_stamp_checkbox.TabIndex = 1;
             this.time_stamp_checkbox.Text = "显示时间";
             this.time_stamp_checkbox.UseVisualStyleBackColor = true;
+            // 
+            // hex_send_checkbox
+            // 
+            this.hex_send_checkbox.AutoSize = true;
+            this.hex_send_checkbox.Location = new System.Drawing.Point(146, 170);
+            this.hex_send_checkbox.Name = "hex_send_checkbox";
+            this.hex_send_checkbox.Size = new System.Drawing.Size(66, 16);
+            this.hex_send_checkbox.TabIndex = 7;
+            this.hex_send_checkbox.Text = "hex发送";
+            this.hex_send_checkbox.UseVisualStyleBackColor = true;
+            this.hex_send_checkbox.CheckedChanged += new System.EventHandler(this.hex_send_checkbox_CheckedChanged);
+            // 
+            // display_send_checkbox
+            // 
+            this.display_send_checkbox.AutoSize = true;
+            this.display_send_checkbox.Location = new System.Drawing.Point(77, 170);
+            this.display_send_checkbox.Name = "display_send_checkbox";
+            this.display_send_checkbox.Size = new System.Drawing.Size(72, 16);
+            this.display_send_checkbox.TabIndex = 12;
+            this.display_send_checkbox.Text = "显示发送";
+            this.display_send_checkbox.UseVisualStyleBackColor = true;
             // 
             // client_groupbox
             // 
@@ -231,13 +272,6 @@
             this.label5.TabIndex = 0;
             this.label5.Text = "客户端:";
             // 
-            // send_peri_textbox
-            // 
-            this.send_peri_textbox.Location = new System.Drawing.Point(349, 168);
-            this.send_peri_textbox.Name = "send_peri_textbox";
-            this.send_peri_textbox.Size = new System.Drawing.Size(38, 21);
-            this.send_peri_textbox.TabIndex = 4;
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -246,28 +280,6 @@
             this.label4.Size = new System.Drawing.Size(35, 12);
             this.label4.TabIndex = 4;
             this.label4.Text = "ms/次";
-            // 
-            // send_peri_checkbox
-            // 
-            this.send_peri_checkbox.AutoSize = true;
-            this.send_peri_checkbox.Location = new System.Drawing.Point(281, 170);
-            this.send_peri_checkbox.Name = "send_peri_checkbox";
-            this.send_peri_checkbox.Size = new System.Drawing.Size(72, 16);
-            this.send_peri_checkbox.TabIndex = 9;
-            this.send_peri_checkbox.Text = "定时发送";
-            this.send_peri_checkbox.UseVisualStyleBackColor = true;
-            this.send_peri_checkbox.CheckedChanged += new System.EventHandler(this.send_peri_checkbox_CheckedChanged);
-            // 
-            // hex_send_checkbox
-            // 
-            this.hex_send_checkbox.AutoSize = true;
-            this.hex_send_checkbox.Location = new System.Drawing.Point(146, 170);
-            this.hex_send_checkbox.Name = "hex_send_checkbox";
-            this.hex_send_checkbox.Size = new System.Drawing.Size(66, 16);
-            this.hex_send_checkbox.TabIndex = 7;
-            this.hex_send_checkbox.Text = "hex发送";
-            this.hex_send_checkbox.UseVisualStyleBackColor = true;
-            this.hex_send_checkbox.CheckedChanged += new System.EventHandler(this.hex_send_checkbox_CheckedChanged);
             // 
             // hex_display_checkbox
             // 
@@ -279,16 +291,6 @@
             this.hex_display_checkbox.Text = "hex显示";
             this.hex_display_checkbox.UseVisualStyleBackColor = true;
             this.hex_display_checkbox.CheckedChanged += new System.EventHandler(this.hex_display_checkbox_CheckedChanged);
-            // 
-            // clear_recive_wind_button
-            // 
-            this.clear_recive_wind_button.Location = new System.Drawing.Point(42, 206);
-            this.clear_recive_wind_button.Name = "clear_recive_wind_button";
-            this.clear_recive_wind_button.Size = new System.Drawing.Size(46, 23);
-            this.clear_recive_wind_button.TabIndex = 5;
-            this.clear_recive_wind_button.Text = "清除";
-            this.clear_recive_wind_button.UseVisualStyleBackColor = true;
-            this.clear_recive_wind_button.Click += new System.EventHandler(this.clear_recive_wind_button_Click);
             // 
             // send_button
             // 
@@ -343,7 +345,7 @@
             // 
             // command_button
             // 
-            this.command_button.Location = new System.Drawing.Point(94, 205);
+            this.command_button.Location = new System.Drawing.Point(12, 43);
             this.command_button.Name = "command_button";
             this.command_button.Size = new System.Drawing.Size(46, 23);
             this.command_button.TabIndex = 10;
@@ -355,25 +357,35 @@
             // 
             this.periodic_send_timer.Tick += new System.EventHandler(this.periodic_send_timer_Tick);
             // 
-            // display_send_checkbox
+            // groupBox2
             // 
-            this.display_send_checkbox.AutoSize = true;
-            this.display_send_checkbox.Location = new System.Drawing.Point(77, 170);
-            this.display_send_checkbox.Name = "display_send_checkbox";
-            this.display_send_checkbox.Size = new System.Drawing.Size(72, 16);
-            this.display_send_checkbox.TabIndex = 12;
-            this.display_send_checkbox.Text = "显示发送";
-            this.display_send_checkbox.UseVisualStyleBackColor = true;
+            this.groupBox2.Controls.Add(this.ascii_button);
+            this.groupBox2.Controls.Add(this.command_button);
+            this.groupBox2.Location = new System.Drawing.Point(12, 162);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(169, 76);
+            this.groupBox2.TabIndex = 11;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "工具";
+            // 
+            // ascii_button
+            // 
+            this.ascii_button.Location = new System.Drawing.Point(82, 43);
+            this.ascii_button.Name = "ascii_button";
+            this.ascii_button.Size = new System.Drawing.Size(75, 23);
+            this.ascii_button.TabIndex = 11;
+            this.ascii_button.Text = "ASCII码表";
+            this.ascii_button.UseVisualStyleBackColor = true;
+            this.ascii_button.Click += new System.EventHandler(this.ascii_button_Click);
             // 
             // net_tool
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(635, 250);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.command_button);
             this.Controls.Add(this.net_set_Box);
-            this.Controls.Add(this.clear_recive_wind_button);
             this.Name = "net_tool";
             this.Text = "网络调试";
             this.Load += new System.EventHandler(this.net_tool_Load);
@@ -384,6 +396,7 @@
             this.client_groupbox.ResumeLayout(false);
             this.client_groupbox.PerformLayout();
             this.receive_box_contextMenuStrip.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -409,7 +422,6 @@
         private System.Windows.Forms.CheckBox send_peri_checkbox;
         private System.Windows.Forms.CheckBox hex_send_checkbox;
         private System.Windows.Forms.CheckBox hex_display_checkbox;
-        private System.Windows.Forms.Button clear_recive_wind_button;
         private System.Windows.Forms.Timer periodic_send_timer;
         private System.Windows.Forms.ContextMenuStrip receive_box_contextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
@@ -421,6 +433,8 @@
         private System.Windows.Forms.Button discon_client_button;
         private System.Windows.Forms.CheckBox time_stamp_checkbox;
         private System.Windows.Forms.CheckBox display_send_checkbox;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Button ascii_button;
     }
 }
 

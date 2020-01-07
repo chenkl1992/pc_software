@@ -521,11 +521,6 @@ namespace test_net
             socket_init();
         }
 
-        private void clear_recive_wind_button_Click(object sender, EventArgs e)
-        {
-            clearMsg();
-        }
-
         //数据发送
         private void send()
         {
@@ -714,6 +709,12 @@ namespace test_net
             {
                 clear_list_combobox();
             }
+        }
+
+        private void ascii_button_Click(object sender, EventArgs e)
+        {
+            ascii_Form ascii_form = new ascii_Form();
+            ascii_form.Show();
         }
     }
 }

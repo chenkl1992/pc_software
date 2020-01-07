@@ -53,7 +53,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(326, 177);
+            this.ClientSize = new System.Drawing.Size(352, 130);
             this.Controls.Add(this.command_textbox);
             this.Controls.Add(this.cmd_send_button);
             this.Name = "cmd_Form";
