@@ -78,6 +78,9 @@ namespace test_net
 
             //此时无客户端连接
             clear_client_info();
+
+            //默认显示发送
+            display_send_checkbox.Checked = true;
         }
 
         //获取本机ip地址
@@ -179,10 +182,11 @@ namespace test_net
         private void server_socket_close()
         {
             periodic_state_change();
-            if (server_socket != null)
-            {
-                server_socket.Shutdown(SocketShutdown.Both);
-            }
+            //if (server_socket != null)
+            //{
+            //    server_socket.Shutdown(SocketShutdown.Both);
+            //}
+
             //客户端清除
             clear_list_combobox();
             clientSocket.Clear();
@@ -701,7 +705,7 @@ namespace test_net
 
         private void discon_client_button_Click(object sender, EventArgs e)
         {
-            if (net_connect_state == (int)connect_state.CONNECT)
+            if (net_connect_state == (int)connect_state.LISTEN)
             {
                 server_connected_close();
             }

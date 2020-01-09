@@ -1,4 +1,7 @@
-﻿namespace test_net
+﻿using System;
+using System.Windows.Forms;
+
+namespace test_net
 {
     partial class ascii_Form
     {
@@ -561,6 +564,7 @@
             this.hex,
             this.char_num,
             this.explan});
+            this.ascii_listView.FullRowSelect = true;
             this.ascii_listView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
             listViewItem1,
             listViewItem2,
@@ -661,8 +665,7 @@
             listViewItem97,
             listViewItem98,
             listViewItem99,
-            listViewItem100,
-            });
+            listViewItem100});
             this.ascii_listView.Location = new System.Drawing.Point(12, 12);
             this.ascii_listView.Name = "ascii_listView";
             this.ascii_listView.Size = new System.Drawing.Size(290, 316);
@@ -681,13 +684,13 @@
             this.ResumeLayout(false);
 
         }
-
-        #endregion
+        #endregion;
 
         private System.Windows.Forms.ColumnHeader deci;
         private System.Windows.Forms.ColumnHeader hex;
         private System.Windows.Forms.ColumnHeader char_num;
         private System.Windows.Forms.ColumnHeader explan;
         private System.Windows.Forms.ListView ascii_listView;
+
     }
 }
