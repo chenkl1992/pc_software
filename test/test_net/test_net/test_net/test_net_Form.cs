@@ -683,6 +683,7 @@ namespace test_net
         {
             cmd_Form cmd_form = new cmd_Form();
             cmd_form.send_command += f_add_send_command;
+            //cmd_form.TopLevel = false;
             cmd_form.Show();
             //cmd_form.Close();
         }

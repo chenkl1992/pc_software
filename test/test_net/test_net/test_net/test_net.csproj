@@ -52,6 +52,9 @@
     <Compile Include="ascii_Form.Designer.cs">
       <DependentUpon>ascii_Form.cs</DependentUpon>
     </Compile>
+    <Compile Include="ListViewEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="test_net_Form.cs">
       <SubType>Form</SubType>
     </Compile>
