@@ -33,8 +33,6 @@
             this.command_textbox = new System.Windows.Forms.TextBox();
             this.add_item_button = new System.Windows.Forms.Button();
             this.del_item_button = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
-            //this.command_listView = new System.Windows.Forms.ListView();
             this.command_listView = new ListViewEmbeddedControls.ListViewEx();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -81,14 +79,6 @@
             this.del_item_button.UseVisualStyleBackColor = true;
             this.del_item_button.Click += new System.EventHandler(this.del_item_button_Click);
             // 
-            // panel1
-            // 
-            this.panel1.AutoScroll = true;
-            this.panel1.Location = new System.Drawing.Point(12, 207);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(372, 103);
-            this.panel1.TabIndex = 6;
-            // 
             // command_listView
             // 
             this.command_listView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -98,12 +88,15 @@
             this.columnHeader4,
             this.columnHeader5,
             this.columnHeader6});
+            this.command_listView.FullRowSelect = true;
             this.command_listView.Location = new System.Drawing.Point(12, 39);
+            this.command_listView.MultiSelect = false;
             this.command_listView.Name = "command_listView";
-            this.command_listView.Size = new System.Drawing.Size(383, 162);
+            this.command_listView.Size = new System.Drawing.Size(383, 271);
             this.command_listView.TabIndex = 0;
             this.command_listView.UseCompatibleStateImageBehavior = false;
             this.command_listView.View = System.Windows.Forms.View.Details;
+            this.command_listView.SelectedIndexChanged += new System.EventHandler(this.command_listView_SelectedIndexChanged);
             // 
             // columnHeader1
             // 
@@ -120,19 +113,19 @@
             // 
             this.columnHeader3.Text = "数据格式";
             this.columnHeader3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.columnHeader3.Width = 70;
+            this.columnHeader3.Width = 83;
             // 
             // columnHeader4
             // 
             this.columnHeader4.Text = "数据";
             this.columnHeader4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.columnHeader4.Width = 140;
+            this.columnHeader4.Width = 141;
             // 
             // columnHeader5
             // 
             this.columnHeader5.Text = "延时";
             this.columnHeader5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.columnHeader5.Width = 50;
+            this.columnHeader5.Width = 45;
             // 
             // columnHeader6
             // 
@@ -146,7 +139,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(409, 358);
             this.Controls.Add(this.command_listView);
-            this.Controls.Add(this.panel1);
             this.Controls.Add(this.del_item_button);
             this.Controls.Add(this.add_item_button);
             this.Controls.Add(this.command_textbox);
@@ -163,7 +155,6 @@
         private System.Windows.Forms.TextBox command_textbox;
         private System.Windows.Forms.Button add_item_button;
         private System.Windows.Forms.Button del_item_button;
-        private System.Windows.Forms.Panel panel1;
         //private System.Windows.Forms.ListView command_listView;
         private ListViewEmbeddedControls.ListViewEx command_listView;
         private System.Windows.Forms.ColumnHeader columnHeader1;

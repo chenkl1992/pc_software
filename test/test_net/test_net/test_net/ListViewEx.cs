@@ -27,7 +27,7 @@ namespace ListViewEmbeddedControls
 		/// <summary>
 		/// Structure to hold an embedded control's info
 		/// </summary>
-		private struct EmbeddedControl
+		public struct EmbeddedControl
 		{
 			public Control Control;
 			public int Column;
@@ -164,6 +164,19 @@ namespace ListViewEmbeddedControls
 				}
 			}
 			throw new Exception("Control not found!");
+		}
+
+		public void MoveupEmbeddedControl(int row, int group_num)
+		{
+			for (int i = _embeddedControls.Count-1 ; i > row*group_num; i--)
+			{
+				EmbeddedControl ec = (EmbeddedControl)_embeddedControls[i];
+				if(ec.Row >= row)
+				{
+					ec.Row--;
+					_embeddedControls[i] = ec;
+				}
+			}
 		}
 		
 		/// <summary>
