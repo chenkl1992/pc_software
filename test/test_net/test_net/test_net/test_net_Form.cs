@@ -371,16 +371,6 @@ namespace test_net
             discon_client_button.Text = "断开";
         }
 
-        private void hex_send_checkbox_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void hex_display_checkbox_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void display_format_change_udp(byte[] bytes, int r, EndPoint point)
         {
             string str;
@@ -584,7 +574,14 @@ namespace test_net
                 }
                 if (display_send_checkbox.Checked == true)
                 {
-                    logMsg("[Tx]: " + str + "\r");
+                    if (hex_send_checkbox.Checked == true)
+                    {
+                        logMsg("[Tx](H): " + str + "\r");
+                    }
+                    else
+                    {
+                        logMsg("[Tx]: " + str + "\r");
+                    }
                 }
             }
             catch 
@@ -621,13 +618,13 @@ namespace test_net
             }
         }
 
-        private void periodic_send_judge()
+        private void periodic_send_judge(int period)
         {
             if (send_peri_checkbox.Checked == true)
             {
                 if (send_peri_textbox.Text != "")
                 {
-                    periodic_send_timer.Interval = Convert.ToInt32(send_peri_textbox.Text);
+                    periodic_send_timer.Interval = period;
                     periodic_send_timer.Enabled = true;
                     periodic_send_timer.Start();
                     send_button.Enabled = false;
@@ -637,9 +634,9 @@ namespace test_net
 
         private void send_button_Click(object sender, EventArgs e)
         {
-            //判断是否需要周期发送
-            periodic_send_judge();
             send();
+            //判断是否需要周期发送
+            periodic_send_judge(Convert.ToInt32(send_peri_textbox.Text));
         }
 
         private void periodic_send_timer_Tick(object sender, EventArgs e)
@@ -688,10 +685,25 @@ namespace test_net
             //cmd_form.Close();
         }
 
-        void f_add_send_command(string str)
+        void f_add_send_command(string str, int ishex, int period)
         {
             send_box.Text = str;
-            send();
+            hex_send_checkbox.Checked = false;
+            send_peri_checkbox.Checked = false;
+            if (ishex == 1)
+            {
+                hex_send_checkbox.Checked = true;
+            }
+            if (period != 0)
+            {
+                send_peri_checkbox.Checked = true;
+                send_peri_textbox.Text = period.ToString();
+                periodic_send_judge(period);
+            }
+            else
+            {
+                send();
+            }
         }
 
         private void clear_list_combobox()

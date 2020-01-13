@@ -11,20 +11,15 @@ using System.Windows.Forms;
 
 namespace test_net
 {
-    public delegate void add_send_command(string str);
+    public delegate void add_send_command(string str, int ishex, int period);
     public partial class cmd_Form : Form
     {
         int item_num = 0;
+        public event add_send_command send_command;
+
         public cmd_Form()
         {
             InitializeComponent();
-        }
-
-        public event add_send_command send_command;
-        private void cmd_send_button_Click(object sender, EventArgs e)
-        {
-            send_command(command_textbox.Text);
-            //this.Close();
         }
 
         private void add_item_button_Click(object sender, EventArgs e)
@@ -35,7 +30,7 @@ namespace test_net
 
         private void add_item(int i)
         {
-            listview(true);
+            listview(true, 0);
             //添加控件
             add_info_text(i);
             add_format_choice(i);
@@ -46,13 +41,13 @@ namespace test_net
             this.command_listView.Items[this.command_listView.Items.Count - 1].EnsureVisible();
         }
 
-        private void delete_item()
+        private void delete_item(int idx)
         {
             //删除 list
-            listview(false);
+            listview(false, idx);
         }
 
-        private void listview(bool act)
+        private void listview(bool act, int idx)
         {
             if (act == true)
             {
@@ -69,7 +64,7 @@ namespace test_net
             }
             else
             {
-                this.command_listView.Items.Remove(command_listView.SelectedItems[0]);    
+                this.command_listView.Items.Remove(command_listView.Items[idx]);    
             }
         }
 
@@ -106,8 +101,8 @@ namespace test_net
         private void add_format_choice(int i)
         {
             ComboBox send_format = new ComboBox();
-            send_format.Items.Add("十六进制");
             send_format.Items.Add("字符串");
+            send_format.Items.Add("十六进制");
             send_format.DropDownStyle = ComboBoxStyle.DropDownList;
             send_format.SelectedIndex = 0;
             command_listView.AddEmbeddedControl(send_format, (int)item_info.COMBOBOX, i);
@@ -122,13 +117,34 @@ namespace test_net
         {
             Control item;
             Button btn = (Button)sender;
+            TextBox send_data;
+            ComboBox send_select;
+            TextBox send_delay;
+            int index = Convert.ToInt32(btn.Tag);
 
-            item = command_listView.GetEmbeddedControl((int)item_info.TEXTBOX_DATA, Convert.ToInt32(btn.Tag));
-            //item = command_listView.GetEmbeddedControl((int)item_info.TEXTBOX_DATA, command_listView.SelectedItems[0].Index); 
+            item = command_listView.GetEmbeddedControl((int)item_info.TEXTBOX_DATA, index);
             if (item != null)
             {
-                TextBox test = item as TextBox;
-                MessageBox.Show("Txt:" + test.Text + "btn:" + btn.Tag.ToString());
+                send_data = item as TextBox;
+                item = command_listView.GetEmbeddedControl((int)item_info.COMBOBOX, index);
+                if (item != null)
+                {
+                    send_select = item as ComboBox;
+                    item = command_listView.GetEmbeddedControl((int)item_info.TEXTBOX_DELAY, index);
+                    if (item != null)
+                    {
+                        send_delay = item as TextBox;
+                        if (Convert.ToInt32(send_delay.Text)>0 )
+                        {
+                            btn.Enabled = false;
+                        }
+                        else
+                        {
+                            btn.Enabled = true;
+                        }
+                        send_command(send_data.Text, send_select.SelectedIndex, Convert.ToInt32(send_delay.Text));
+                    }
+                }
             }
             else
             {
@@ -173,12 +189,17 @@ namespace test_net
                 if (command_listView.SelectedItems[0] != null)
                 {
                     int idx_tmp = command_listView.SelectedItems[0].Index;
-                    move_up_buttonTag(idx_tmp, item_num);
-                    remove_controls(idx_tmp);
-                    delete_item();
-                    item_num--;
+                    delete_one_item(idx_tmp, item_num);
+                    item_num --;
                 }
             }
+        }
+
+        private void delete_one_item(int idx, int total_num)
+        {
+            move_up_buttonTag(idx, total_num);
+            remove_controls(idx);
+            delete_item(idx);
         }
 
         private void command_listView_SelectedIndexChanged(object sender, EventArgs e)
@@ -190,6 +211,14 @@ namespace test_net
                     Items.BackColor = Color.White;
                 }
                 command_listView.SelectedItems[0].BackColor = Color.Bisque;
+            }
+        }
+
+        private void clean_lst_button_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < item_num; item_num--)
+            {
+                delete_one_item(0, item_num);
             }
         }
     }

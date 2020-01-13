@@ -166,6 +166,7 @@ namespace ListViewEmbeddedControls
 			throw new Exception("Control not found!");
 		}
 
+		//let row num in list correct
 		public void MoveupEmbeddedControl(int row, int group_num)
 		{
 			for (int i = _embeddedControls.Count-1 ; i > row*group_num; i--)

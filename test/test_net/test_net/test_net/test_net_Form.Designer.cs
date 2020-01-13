@@ -219,7 +219,6 @@
             this.hex_send_checkbox.TabIndex = 7;
             this.hex_send_checkbox.Text = "hex发送";
             this.hex_send_checkbox.UseVisualStyleBackColor = true;
-            this.hex_send_checkbox.CheckedChanged += new System.EventHandler(this.hex_send_checkbox_CheckedChanged);
             // 
             // display_send_checkbox
             // 
@@ -290,7 +289,6 @@
             this.hex_display_checkbox.TabIndex = 6;
             this.hex_display_checkbox.Text = "hex显示";
             this.hex_display_checkbox.UseVisualStyleBackColor = true;
-            this.hex_display_checkbox.CheckedChanged += new System.EventHandler(this.hex_display_checkbox_CheckedChanged);
             // 
             // send_button
             // 
@@ -347,9 +345,9 @@
             // 
             this.command_button.Location = new System.Drawing.Point(12, 43);
             this.command_button.Name = "command_button";
-            this.command_button.Size = new System.Drawing.Size(46, 23);
+            this.command_button.Size = new System.Drawing.Size(64, 23);
             this.command_button.TabIndex = 10;
-            this.command_button.Text = "命令";
+            this.command_button.Text = "命令列表";
             this.command_button.UseVisualStyleBackColor = true;
             this.command_button.Click += new System.EventHandler(this.command_button_Click);
             // 
