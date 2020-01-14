@@ -39,6 +39,7 @@
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.save_button = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // add_item_button
@@ -125,17 +126,29 @@
             this.columnHeader6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader6.Width = 40;
             // 
+            // save_button
+            // 
+            this.save_button.Location = new System.Drawing.Point(88, 291);
+            this.save_button.Name = "save_button";
+            this.save_button.Size = new System.Drawing.Size(53, 28);
+            this.save_button.TabIndex = 7;
+            this.save_button.Text = "保存";
+            this.save_button.UseVisualStyleBackColor = true;
+            this.save_button.Click += new System.EventHandler(this.save_button_Click);
+            // 
             // cmd_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(409, 329);
+            this.Controls.Add(this.save_button);
             this.Controls.Add(this.clean_lst_button);
             this.Controls.Add(this.command_listView);
             this.Controls.Add(this.del_item_button);
             this.Controls.Add(this.add_item_button);
             this.Name = "cmd_Form";
             this.Text = "命令列表";
+            this.Load += new System.EventHandler(this.cmd_Form_Load);
             this.ResumeLayout(false);
 
         }
@@ -152,5 +165,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.Button clean_lst_button;
+        private System.Windows.Forms.Button save_button;
     }
 }

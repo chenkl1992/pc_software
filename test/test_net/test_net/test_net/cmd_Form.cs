@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,18 +25,18 @@ namespace test_net
 
         private void add_item_button_Click(object sender, EventArgs e)
         {
-            add_item(item_num);
+            add_item_default(item_num);
             item_num++;
         }
 
-        private void add_item(int i)
+        private void add_item_default(int i)
         {
-            listview(true, 0);
+            set_listview(true, 0);
             //添加控件
-            add_info_text(i);
-            add_format_choice(i);
-            add_send_text(i);
-            add_sendDelay_text(i);
+            add_info_text(i, "");
+            add_format_choice(i, "0");
+            add_send_text(i, "");
+            add_sendDelay_text(i, "0");
             add_send_button(i);
 
             this.command_listView.Items[this.command_listView.Items.Count - 1].EnsureVisible();
@@ -44,10 +45,10 @@ namespace test_net
         private void delete_item(int idx)
         {
             //删除 list
-            listview(false, idx);
+            set_listview(false, idx);
         }
 
-        private void listview(bool act, int idx)
+        private void set_listview(bool act, int idx)
         {
             if (act == true)
             {
@@ -58,7 +59,7 @@ namespace test_net
                 imgList.ImageSize = new Size(1, 25);
                 command_listView.SmallImageList = imgList;
 
-                //添加元素
+                //添加元素（行）,为了居中第一列为空
                 cmdlst_item[0] = new ListViewItem(new string[] { "", "", "", "", "", "" });
                 this.command_listView.Items.AddRange(cmdlst_item);
             }
@@ -75,42 +76,46 @@ namespace test_net
             Button m_button = new Button();
             //按钮的位置
             m_button.Click += new EventHandler(item_send_button_Click);
-            m_button.Text = "发送"+ i.ToString();
+            m_button.Text = "发送";
             m_button.Tag = i;
             m_button.BackColor = Color.LightBlue;
             m_button.Font = new Font("黑体", 7);
             command_listView.AddEmbeddedControl(m_button, (int)item_info.BUTTON_SEND, i);
         }
 
-        private void add_sendDelay_text(int i)
+        private void add_sendDelay_text(int i, string parm)
         {
             TextBox delay_parm = new TextBox();
-            //延时框的位置
-            delay_parm.Text = "0";
+            //延时框
+            delay_parm.Text =  parm;
             command_listView.AddEmbeddedControl(delay_parm, (int)item_info.TEXTBOX_DELAY, i);
         }
 
-        private void add_send_text(int i)
+        private void add_send_text(int i, string parm)
         {
             TextBox send_data = new TextBox();
-            //发送框的位置
-            send_data.Text = item_num.ToString()+ item_num.ToString();
+            //发送框
+            send_data.Text = parm;
             command_listView.AddEmbeddedControl(send_data, (int)item_info.TEXTBOX_DATA, i);
         }
 
-        private void add_format_choice(int i)
+        private void add_format_choice(int i, string parm)
         {
             ComboBox send_format = new ComboBox();
             send_format.Items.Add("字符串");
             send_format.Items.Add("十六进制");
             send_format.DropDownStyle = ComboBoxStyle.DropDownList;
-            send_format.SelectedIndex = 0;
+            if (Convert.ToInt32(parm) <= 1)
+            {
+                send_format.SelectedIndex = Convert.ToInt32(parm);
+            }
             command_listView.AddEmbeddedControl(send_format, (int)item_info.COMBOBOX, i);
         }
 
-        private void add_info_text(int i)
+        private void add_info_text(int i, string parm)
         {
             TextBox add_info = new TextBox();
+            add_info.Text = parm;
             command_listView.AddEmbeddedControl(add_info, (int)item_info.TEXTBOX_INFO, i);
         }
         private void item_send_button_Click(object sender, EventArgs e)
@@ -159,7 +164,7 @@ namespace test_net
                 item = command_listView.GetEmbeddedControl((int)item_info.BUTTON_SEND, j);
                 if (item != null)
                 {
-                    item.Tag = j-1;
+                    item.Tag = j - 1;
                 }
                 else
                 {
@@ -220,6 +225,133 @@ namespace test_net
             {
                 delete_one_item(0, item_num);
             }
+        }
+
+        public string Path = @"..\..\..\test.txt";
+        private void cmd_Form_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                load_setting();
+            }
+            catch
+            {
+                init_setting();
+                MessageBox.Show("cfg init!");
+            }
+        }
+
+        private void load_setting()
+        {
+            string line;
+            int config_count = 0;
+            //从文件读取并判断行数
+            using (StreamReader sr = new StreamReader(Path))
+            {
+                while ((line = sr.ReadLine()) != null)
+                {
+                    config_count++;
+                }
+
+                if (config_count % 5 != 0)
+                {
+                    MessageBox.Show("config info error!" + config_count.ToString());
+                    return;
+                }
+                else
+                {
+                    item_num = config_count / 5;
+                }
+            }
+            //从文件读取并创建控件
+            using (StreamReader sr2 = new StreamReader(Path))
+            {
+                string tmp_str;
+                int tmp_idx;
+                for (int i = 0; i < config_count/5; i++)
+                {
+                    set_listview(true, 0);
+                    line = sr2.ReadLine();
+                    tmp_idx = line.IndexOf(":") + 1;
+                    tmp_str = line.Substring(tmp_idx);
+                    add_info_text(i, tmp_str);
+
+                    line = sr2.ReadLine();
+                    tmp_idx = line.IndexOf(":") + 1;
+                    tmp_str = line.Substring(tmp_idx);
+                    add_format_choice(i, tmp_str);
+
+                    line = sr2.ReadLine();
+                    tmp_idx = line.IndexOf(":") + 1;
+                    tmp_str = line.Substring(tmp_idx);
+                    add_send_text(i, tmp_str);
+
+                    line = sr2.ReadLine();
+                    tmp_idx = line.IndexOf(":") + 1;
+                    tmp_str = line.Substring(tmp_idx);
+                    add_sendDelay_text(i, tmp_str);
+
+                    sr2.ReadLine();
+                    add_send_button(i);
+                }
+                this.command_listView.Items[this.command_listView.Items.Count - 1].EnsureVisible();
+            }
+        }
+
+        private void save_button_Click(object sender, EventArgs e)
+        {
+            save_setting();
+        }
+
+        private void init_setting()
+        {
+            FileStream fs = File.Open(Path, FileMode.Create, FileAccess.Write);
+            StreamWriter sw = new StreamWriter(fs);
+            //关闭文件
+            sw.Flush();
+            sw.Close();
+            fs.Close();
+        }
+
+        private void save_setting()
+        {
+            Control item;
+            FileStream fs = File.Open(Path, FileMode.Create, FileAccess.Write);
+            StreamWriter sw = new StreamWriter(fs);
+
+            for (int j = 0; j < item_num; j++)
+            {
+                for (int i = (int)item_info.TEXTBOX_INFO; i <= (int)item_info.BUTTON_SEND; i++)
+                {
+                    item = command_listView.GetEmbeddedControl(i, j);
+                    if (item != null)
+                    {
+                        if (i == (int)item_info.TEXTBOX_INFO)
+                        {
+                            sw.WriteLine("Info:" + item.Text);
+                        }
+                        else if (i == (int)item_info.COMBOBOX)
+                        {
+                            ComboBox send_select;
+                            send_select = item as ComboBox;
+                            sw.WriteLine("Combo:"+ send_select.SelectedIndex.ToString());
+                        }
+                        else if (i == (int)item_info.TEXTBOX_DATA)
+                        {
+                            sw.WriteLine("Data:" + item.Text);
+                        }
+                        else if (i == (int)item_info.TEXTBOX_DELAY)
+                        {
+                            sw.WriteLine("Delay:" + item.Text + "\r\n");
+                        }
+                    }
+                }
+            }
+            //关闭文件
+            sw.Flush();
+            sw.Close();
+            fs.Close();
+            MessageBox.Show("保存成功！");
         }
     }
 }

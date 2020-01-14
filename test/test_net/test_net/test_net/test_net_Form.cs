@@ -249,14 +249,14 @@ namespace test_net
         {
             if (i == true)
             {
-                net_connect_button.BackColor = System.Drawing.Color.LightGreen;
+                net_connect_button.BackColor = Color.LightGreen;
                 port_box.Enabled = true;
                 ip_box.Enabled = true;
                 net_type_box.Enabled = true;
             }
             else 
             {
-                net_connect_button.BackColor = System.Drawing.Color.Tomato;
+                net_connect_button.BackColor = Color.Tomato;
                 port_box.Enabled = false;
                 ip_box.Enabled = false;
                 net_type_box.Enabled = false;
