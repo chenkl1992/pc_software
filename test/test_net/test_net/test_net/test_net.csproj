@@ -52,6 +52,13 @@
     <Compile Include="ascii_Form.Designer.cs">
       <DependentUpon>ascii_Form.cs</DependentUpon>
     </Compile>
+    <Compile Include="crcEx.cs" />
+    <Compile Include="crc_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="crc_Form.Designer.cs">
+      <DependentUpon>crc_Form.cs</DependentUpon>
+    </Compile>
     <Compile Include="ListViewEx.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -71,6 +78,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ascii_Form.resx">
       <DependentUpon>ascii_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="crc_Form.resx">
+      <DependentUpon>crc_Form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="test_net_Form.resx">
       <DependentUpon>test_net_Form.cs</DependentUpon>

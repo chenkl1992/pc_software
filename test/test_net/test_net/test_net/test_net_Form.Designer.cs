@@ -62,6 +62,7 @@
             this.periodic_send_timer = new System.Windows.Forms.Timer(this.components);
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.ascii_button = new System.Windows.Forms.Button();
+            this.crc_cal_button = new System.Windows.Forms.Button();
             this.net_set_Box.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.client_groupbox.SuspendLayout();
@@ -357,6 +358,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.crc_cal_button);
             this.groupBox2.Controls.Add(this.ascii_button);
             this.groupBox2.Controls.Add(this.command_button);
             this.groupBox2.Location = new System.Drawing.Point(12, 162);
@@ -375,6 +377,16 @@
             this.ascii_button.Text = "ASCII码表";
             this.ascii_button.UseVisualStyleBackColor = true;
             this.ascii_button.Click += new System.EventHandler(this.ascii_button_Click);
+            // 
+            // crc_cal_button
+            // 
+            this.crc_cal_button.Location = new System.Drawing.Point(48, 16);
+            this.crc_cal_button.Name = "crc_cal_button";
+            this.crc_cal_button.Size = new System.Drawing.Size(64, 23);
+            this.crc_cal_button.TabIndex = 12;
+            this.crc_cal_button.Text = "crc计算";
+            this.crc_cal_button.UseVisualStyleBackColor = true;
+            this.crc_cal_button.Click += new System.EventHandler(this.crc_cal_button_Click);
             // 
             // net_tool
             // 
@@ -433,6 +445,7 @@
         private System.Windows.Forms.CheckBox display_send_checkbox;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button ascii_button;
+        private System.Windows.Forms.Button crc_cal_button;
     }
 }
 

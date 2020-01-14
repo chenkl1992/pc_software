@@ -733,5 +733,11 @@ namespace test_net
             ascii_Form ascii_form = new ascii_Form();
             ascii_form.Show();
         }
+
+        private void crc_cal_button_Click(object sender, EventArgs e)
+        {
+            crc_Form crc_form = new crc_Form();
+            crc_form.Show();
+        }
     }
 }
